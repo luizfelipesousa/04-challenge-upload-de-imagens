@@ -4,7 +4,7 @@ import fauna from 'faunadb';
 const { query } = fauna;
 const client = new fauna.Client({ secret: process.env.FAUNA_API_KEY });
 
-interface ImagesQueryResponse {
+export interface ImagesQueryResponse {
   after?: {
     id: string;
   };
@@ -50,7 +50,6 @@ export default async function handler(
 
   if (req.method === 'GET') {
     const { after } = req.query;
-
     const queryOptions = {
       size: 6,
       ...(after && { after: query.Ref(query.Collection('images'), after) }),
