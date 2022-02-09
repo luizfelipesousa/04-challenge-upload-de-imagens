@@ -1,7 +1,6 @@
 import { Button, Box, Text } from '@chakra-ui/react';
 import { useMemo } from 'react';
 import { useInfiniteQuery } from 'react-query';
-import { AxiosResponse } from 'axios';
 
 import { Header } from '../components/Header';
 import { CardList } from '../components/CardList';
@@ -17,13 +16,18 @@ interface imageProps {
   id: string;
 }
 
-const fetchImages = async pageParam => {
-  if (pageParam) {
-    const response = await api.get(`/api/images?after=${pageParam}`);
-    return response.data;
-  }
-  const responseImages = await api.get(`/api/images`);
-  return responseImages.data;
+type Response = {
+  data: imageProps[];
+  after: string;
+};
+
+const fetchImages = async (pageParam): Promise<Response> => {
+  const response = await api.get(`/api/images`, {
+    params: {
+      after: pageParam,
+    },
+  });
+  return response.data;
 };
 
 export default function Home(): JSX.Element {
